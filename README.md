@@ -18,6 +18,15 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 * The 60 EUR Software [Bomes MIDI Translator](https://www.bome.com/products/miditranslator) has some great features, but using the Rules for more complex keystrokes is annoying and every keystroke has only one output. Not worth the money just for this.
 * I've found AutoHotKey and the MIDI Support from [DannyWarren's AutoHotkey-Midi](https://github.com/dannywarren/AutoHotkey-Midi) and added MIDI Out functionality.
 
+## Features
+
+* You can use the endless rotating knobs 1 and 2 as Jog Shuttle (slow and faster)
+* You can control playback like with keyes JKL
+* Works in all Resolve Pages
+* Knobs for Scrolling, Timeline-Zoom, Clip-Selection, Moving, etc.
+* Many shortcuts for setting In/Out, Mode, Inserting, Clip-Splitting,  Undo, etc.
+* Controls your system master volume
+
 ## Setup
 
 * Download and Install AutoHotKey 1.x from <http://ahkscript.org/> with default Options
