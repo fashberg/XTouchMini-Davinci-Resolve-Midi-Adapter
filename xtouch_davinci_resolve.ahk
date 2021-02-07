@@ -1,37 +1,42 @@
 #include AutoHotkey-Midi/Midi.ahk
-;#include AutoHotkey-Midi/MidiOut.ahk
-;#include AutoHotkey-Midi/Midiout2.ahk
 
  
 midi := new Midi()
-midi.OpenMidiIn( 0 )
-h:=midi.OpenMidiOut( 1 )
+ok:=true
+if (midi.OpenMidiInByName( "X-TOUCH MINI" )<0) ok:=false
+if (midi.OpenMidiOutByName( "X-TOUCH MINI" )<0) ok:=false
+
+if (!ok){
+    MsgBox, Cannot open MIDI Device
+    midi.Destroy()
+    ExitApp, 1
+}
 
 ; standard mode
-midi.MidiOut(h, "CC", 1, 127, 0)
+midi.MidiOut("CC", 1, 127, 0)
 
 ; Layer A
-midi.MidiOut(h, "PC", 1, 0, 0)
+midi.MidiOut("PC", 1, 0, 0)
 Loop 2 { 
     int:=0
     Loop 16 { 
         ; button on
-        midi.MidiOut(h, "N1", 1, int, 1)
+        midi.MidiOut("N1", 1, int, 1)
         int++
         sleep 20
     }
     int:=0
     Loop 16 { 
         ; button off
-        midi.MidiOut(h, "N1", 1, int, 0)
+        midi.MidiOut("N1", 1, int, 0)
         int++
         sleep 20
     }
     ; Layer B
-    midi.MidiOut(h, "PC", 1, 1, 0)
+    midi.MidiOut("PC", 1, 1, 0)
 }
 ; Layer A
-midi.MidiOut(h, "PC", 1, 0, 0)
+midi.MidiOut("PC", 1, 0, 0)
 
 Gosub, ProcessSound
 ;ProcessSound,
@@ -58,7 +63,7 @@ ProcessSound:
     snd := master_volume/100*127
     if (snd!=oldSound){
         OutputDebug, Sound Vol: %master_volume% / %snd%`r`n
-        midi.MidiOut(h, "CC", 11, 8, snd)
+        midi.MidiOut("CC", 11, 8, snd)
         oldSound:=snd
     }
 Return
@@ -175,34 +180,34 @@ repeatJ:
 
 MidiNoteOn8:
     Send {a}
-    midi.MidiOut(h, "N1", 1, 0, 1)
-    midi.MidiOut(h, "N0", 1, 1, 0)
+    midi.MidiOut("N1", 1, 0, 1)
+    midi.MidiOut("N0", 1, 1, 0)
     Return
 
 MidiNoteOff8:
-    midi.MidiOut(h, "N1", 1, 0, 1)
+    midi.MidiOut("N1", 1, 0, 1)
     Return
 
 MidiNoteOn9:
     Send {t}
-    midi.MidiOut(h, "N0", 1, 0, 0)
+    midi.MidiOut("N0", 1, 0, 0)
     Return
 
 MidiNoteOff9:
-    midi.MidiOut(h, "N1", 1, 1, 1)
+    midi.MidiOut("N1", 1, 1, 1)
     Return
 
 MidiNoteOn10:
     Send {w}
     if (!oldW){
-        midi.MidiOut(h, "N0", 1, 2, 0)
+        midi.MidiOut("N0", 1, 2, 0)
     }
     oldW:=!oldW
     Return
 
 MidiNoteOff10:
     if (oldW){
-        midi.MidiOut(h, "N1", 1, 2, 1)
+        midi.MidiOut("N1", 1, 2, 1)
     }
     Return
 
