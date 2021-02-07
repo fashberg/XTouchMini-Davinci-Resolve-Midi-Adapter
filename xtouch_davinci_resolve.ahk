@@ -67,6 +67,11 @@ knob6 := new MidiKnob("knob6")
 knob7 := new MidiKnob("knob7")
 knob8 := new MidiKnob("knob8")
 
+keyrepeatJ := new MidiRepeat("keyrepeatJ")
+keyrepeatK := new MidiRepeat("keyrepeatK")
+keyrepeatL := new MidiRepeat("keyrepeatL")
+
+
 oldSound:=0
 SetTimer, ProcessSound, 1800, -1000
 
@@ -428,61 +433,58 @@ MidiNoteOn20:
     }
     Return
 
-repeatJ:
-    Send {j down}
-    if (repeatJFirst){
-        repeatJFirst:=false
-        SetTimer, , 10
-    }
-    Return
+; keys JKL need to repeat
 
-
-
+; Row2 Key6
+; Reverse (J)
 MidiNoteOn21:
-    repeatJFirst:=true
-    Send {j down}
-    SetTimer, repeatJ, 500
+    keyrepeatJ.calledNoteOn(midi.MidiIn())
     Return
-
 MidiNoteOff21:
-    SetTimer, repeatJ, Delete
+    keyrepeatJ.calledNoteOff(midi.MidiIn())
+    Return
+keyrepeatJfirst(midi){
+    Send {j down}
+}
+keyrepeatJrepeat(midi){
+    Send {j down}
+}
+keyrepeatJstop(midi){
     Send {j up}
-    Return
+}
 
-repeatK:
-    Send {k down}
-    if (repeatKFirst){
-        repeatKFirst:=false
-        SetTimer, , 10
-    }
-    Return
-
+; Row2 Key7
+; STOP (K)
 MidiNoteOn22:
-    repeatKFirst:=true
-    Send {k down}
-    SetTimer, repeatK, 500
+    keyrepeatK.calledNoteOn(midi.MidiIn())
     Return
-
 MidiNoteOff22:
-    SetTimer, repeatK, Delete
+    keyrepeatK.calledNoteOff(midi.MidiIn())
+    Return
+keyrepeatKfirst(midi){
+    Send {k down}
+}
+keyrepeatKrepeat(midi){
+    Send {k down}
+}
+keyrepeatKstop(midi){
     Send {k up}
-    Return
+}
 
-repeatL:
-    Send {l down}
-    if (repeatLFirst){
-        repeatLFirst:=false
-        SetTimer, , 10
-    }
-    Return
-
+; Row2 Key8
+; Forward/PLAY (L)
 MidiNoteOn23:
-    repeatLFirst:=true
-    SetTimer, repeatL, 500
-    Send {l down}
+    keyrepeatL.calledNoteOn(midi.MidiIn())
     Return
-
 MidiNoteOff23:
-    SetTimer, repeatL, Delete
-    Send {l up}
+    keyrepeatL.calledNoteOff(midi.MidiIn())
     Return
+keyrepeatLfirst(midi){
+    Send {l down}
+}
+keyrepeatLrepeat(midi){
+    Send {l down}
+}
+keyrepeatLstop(midi){
+    Send {l up}
+}
