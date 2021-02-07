@@ -20,7 +20,6 @@ if (midi.OpenMidiInByName( "X-TOUCH MINI" )<0){
     ok:=false
 }
 
-
 if (!ok){
     MsgBox, Cannot open MIDI Device
     midi.Destroy()
