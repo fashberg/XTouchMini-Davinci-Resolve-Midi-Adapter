@@ -1,10 +1,25 @@
-#include AutoHotkey-Midi/Midi.ahk
+/*
+ *
+ * Behringer X-TOUCH Mini MIDI 2 Davinci Resolve ShortCut using ahk
+ * 
+ * (C) 2021 by Folke Ashberg, github.com/fashberg
+ * 
+ */
 
- 
+#include AutoHotkey-Midi/Midi.ahk
+#include miditools.ahk
+
+#Persistent
+
 midi := new Midi()
 ok:=true
-if (midi.OpenMidiInByName( "X-TOUCH MINI" )<0) ok:=false
-if (midi.OpenMidiOutByName( "X-TOUCH MINI" )<0) ok:=false
+if (midi.OpenMidiOutByName( "X-TOUCH MINI" )<0){
+    ok:=false
+}
+if (midi.OpenMidiInByName( "X-TOUCH MINI" )<0){
+    ok:=false
+}
+
 
 if (!ok){
     MsgBox, Cannot open MIDI Device
@@ -12,9 +27,10 @@ if (!ok){
     ExitApp, 1
 }
 
-; standard mode
+; switch to standard mode (versus MC-Mode)
 midi.MidiOut("CC", 1, 127, 0)
 
+; clear all buttons and say hello
 ; Layer A
 midi.MidiOut("PC", 1, 0, 0)
 Loop 2 { 
@@ -41,22 +57,25 @@ midi.MidiOut("PC", 1, 0, 0)
 Gosub, ProcessSound
 ;ProcessSound,
 
+isShift := false
+knob1 := new MidiKnob("knob1")
+knob2 := new MidiKnob("knob2")
+knob3 := new MidiKnob("knob3")
+knob4 := new MidiKnob("knob4")
+knob5 := new MidiKnob("knob5")
+knob6 := new MidiKnob("knob6")
+knob7 := new MidiKnob("knob7")
+knob8 := new MidiKnob("knob8")
 
-#Persistent
 oldSound:=0
 SetTimer, ProcessSound, 1800, -1000
 
-WheelLast1:=0
-WheelLast2:=0
-WheelLast3:=0
-WheelLast4:=0
-WheelLast5:=0
-WheelLast6:=0
-WheelLast7:=0
 
+Return  ; end of MAIN
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Return
-
+; called periodically by timer
+; reads master volume and sets knob
 ProcessSound:
     ;; get current master volume and set wheel 8
     SoundGet, master_volume
@@ -68,105 +87,345 @@ ProcessSound:
     }
 Return
 
+;  KNOBS
 
-
-MidiNoteOnA4:
-    MsgBox You played note A4!
-    Return
-
+; KNOB 1
+; JOG
 MidiControlChange1:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-
-    if (ccValue>WheelLast1 or ccValue==127){
-        Send {Right}
-    } else if (ccValue<WheelLast1 or ccValue==0){
-        Send {Left}
-    }
-    WheelLast1:=ccValue
+    knob1.CalledCC(midi.MidiIn())
     Return
+knob1left(midi){
+    global isShift
+    if (!isShift){
+        Send {left}
+    } else {
+        Send +{left}
+    }
+}
+knob1right(midi){
+    global isShift
+    if (!isShift){
+        Send {right}
+    } else {
+        Send +{right}
+    }
+}
 
+; KNOB 2
+; JOG-LONG
 MidiControlChange2:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-
-    if (ccValue>WheelLast2 or ccValue==127){
-        Send {Shift down}{right}{Shift up}
-    } else if (ccValue<WheelLast2 or ccValue==0){
+    knob2.CalledCC(midi.MidiIn())
+    Return
+knob2left(midi){
+    global isShift
+    if (!isShift){
         Send {Shift down}{left}{Shift up}
+    } else {
+        Send +{left 30}
     }
-    WheelLast2:=ccValue
-    Return
+}
+knob2right(midi){
+    global isShift
+    if (!isShift){
+        Send {Shift down}{right}{Shift up}
+    } else {
+        Send +{right 30}      
+    }
+}
 
+; KNOB 3
+; JOG-CUT
 MidiControlChange3:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-    if (ccValue>WheelLast3 or ccValue==127){
-        Send {Down}
-    } else if (ccValue<WheelLast3 or ccValue==0){
+    knob3.CalledCC(midi.MidiIn())
+    Return
+knob3left(midi){
+    global isShift
+    if (!isShift){
         Send {Up}
+    } else {
+        Send ^{WheelDown}
     }
-    WheelLast3:=ccValue
-    Return
+}
+knob3right(midi){
+    global isShift
+    if (!isShift){
+        Send {Down}
+    } else {
+        Send ^{WheelUp}        
+    }
+}
 
+; KNOB 4
+; MOVE
 MidiControlChange4:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-    if (ccValue>WheelLast4 or ccValue==127){
-        ;Send {NumpadRight}
-        Send {Numpad6}
-    } else if (ccValue<WheelLast4 or ccValue==0){
-        ;Send {NumpadLeft}
-        Send {Numpad4}
-    }
-    WheelLast4:=ccValue
+    knob4.CalledCC(midi.MidiIn())
     Return
-
-MidiControlChange5:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-    if (ccValue>WheelLast5 or ccValue==127){
-        Send {.}
-    } else if (ccValue<WheelLast4 or ccValue==0){
+knob4left(midi){
+    global isShift
+    if (!isShift){
         Send {,}
+    } else {
+        Send +{,}
     }
-    WheelLast5:=ccValue
-    Return
+}
+knob4right(midi){
+    global isShift
+    if (!isShift){
+        Send {.}
+    } else {
+        Send +{.}        
+    }
+}
 
+; KNOB 5
+; UNUSED
+MidiControlChange5:
+    knob5.CalledCC(midi.MidiIn())
+    Return
+knob5left(midi){
+    global isShift
+    if (!isShift){
+        Send ^+{Down}
+    } else {
+        Send ^!{Down}
+    }
+}
+knob5right(midi){
+    global isShift
+    if (!isShift){
+        Send ^+{Up}
+    } else {
+        Send ^!{Up}        
+    }
+}
+
+; KNOB 6
+; JOG
 MidiControlChange6:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-    if (ccValue>WheelLast6 or ccValue==127){
-        Send {Ctrl down}{=}{Ctrl up}
-    } else if (ccValue<WheelLast6 or ccValue==0){
-        Send {Ctrl down}{-}{Ctrl up}
-    }
-    WheelLast6:=ccValue
+    knob6.CalledCC(midi.MidiIn())
     Return
+knob6left(midi){
+    global isShift
+    if (!isShift){
+        Send {Numpad4}
+    } else {
+        Send {Numpad2}
+    }
+}
+knob6right(midi){
+    global isShift
+    if (!isShift){
+        Send {Numpad6}
+    } else {
+        Send {Numpad8}
+    }
+}
 
+; KNOB 7
+; ZOOM
 MidiControlChange7:
-    cc := midi.MidiIn()
-    ccValue := cc.value
-    OutputDebug, CC1 %ccValue%`r`n
-    if (ccValue>WheelLast7 or ccValue==127){
-        Send {Ctrl down}{=}{Ctrl up}
-    } else if (ccValue<WheelLast7 or ccValue==0){
-        Send {Ctrl down}{-}{Ctrl up}
-    }
-    WheelLast7:=ccValue
+    knob7.CalledCC(midi.MidiIn())
     Return
+knob7left(midi){
+    global isShift
+    if (!isShift){
+        Send {Ctrl down}{-}{Ctrl up}
+    } else {
+        Send +{WheelUp}
+    }
+}
+knob7right(midi){
+    global isShift
+    if (!isShift){
+        Send {Ctrl down}{=}{Ctrl up}
+    } else {
+        Send +{WheelDown}   
+    }
+}
+; KNOB 7 pressed: reset zoom
+MidiNoteOn6:
+Send {Shift down}z{Shift up}
+Return
 
+; KNOB 8
+; VOLUME
+; Not using MidiKnob, because we want absolute value
 MidiControlChange8:
     cc := midi.MidiIn()
     ccValue := cc.value
     OutputDebug, CC8 %ccValue%`r`n
     SoundSet ccValue/127 * 100
+    Return
+
+; Row1 Key1
+; Select MODE
+; 
+MidiNoteOn8:
+    if (!isShift){
+        Send at
+        ; switch row1/key2 off
+        midi.MidiOut("N0", 1, 1, 0)
+    } else {
+    }
+    Return
+MidiNoteOff8:
+    if (!isShift){
+        ; switch row1/key1 on
+        midi.MidiOut("N1", 1, 0, 1)
+    } else {
+    }   
+    Return
+
+; Row1 Key2
+; TRIM MODE
+; 
+MidiNoteOn9:
+    if (!isShift){
+        Send t
+        ; switch row1/key1 off
+        midi.MidiOut("N0", 1, 0, 0)
+    } else {
+    }
+    Return
+MidiNoteOff9:
+    if (!isShift){
+        ; switch row1/key2 on
+        midi.MidiOut("N1", 1, 1, 1)
+    } else {
+
+    }
+Return
+
+; Row1 Key3
+; SLIP MODE
+; 
+MidiNoteOn10:
+    if (!isShift){
+        Send {w}
+        if (!oldW){
+            midi.MidiOut("N0", 1, 2, 0)
+        }
+        oldW:=!oldW
+    } else {
+    }
+    Return
+MidiNoteOff10:
+    if (!isShift){
+        if (oldW){
+            midi.MidiOut("N1", 1, 2, 1)
+        }
+    } else {
+
+    }
+Return
+
+
+; Row1 Key4
+; SPLIT
+; JOIN
+MidiNoteOn11:
+    if (!isShift){
+        Send {Ctrl down}\{Ctrl up}
+    } else {
+        Send {Alt down}\{Alt up}
+    }
+    Return
+
+; Row1 Key5
+; INSERT
+;
+MidiNoteOn12:
+    if (!isShift){
+        Send {F9}
+    } else {
+    }
+    Return
+
+; Row1 Key6
+; INSERT
+;
+MidiNoteOn13:
+    if (!isShift){
+        Send {F10}
+    } else {
+        Send {Shift down}{F10}{shift up}
+    }
+    Return
+
+; Row1 Key7
+; INSERT
+;
+MidiNoteOn14:
+    if (!isShift){
+        Send {F11}
+    } else {
+        Send {Shift down}{F11}{shift up}
+    }
+    Return
+
+; Row1 Key8
+; INSERT
+;
+MidiNoteOn15:
+    if (!isShift){
+        Send {F12}
+    } else {
+        Send {Shift down}{F12}{shift up}
+    }
+    Return
+
+
+; Row2 Key1
+; SHIFT
+MidiNoteOn16:
+    isShift:=true
+    Return
+MidiNoteOff16:
+    isShift:=false
+    Return
+
+; Row2 Key2
+; Select nearest CLIP
+; Select nearest TRANSITION
+MidiNoteOn17:
+    if (!isShift){
+        Send {Shift down}v{shift up}
+    } else {
+        Send v
+    }
+    Return
+
+; Row2 Key3
+; SET IN
+; CLEAR IN
+MidiNoteOn18:
+    if (!isShift){
+        Send i
+    } else {
+        Send {Alt down}i{Alt up}
+    }
+    Return
+
+; Row2 Key4
+; SET OUT
+; CLEAR OUT
+MidiNoteOn19:
+    if (!isShift){
+        Send o
+    } else {
+        Send {Alt down}o{Alt up}
+    }
+    Return
+
+; Row2 Key5
+; UNDO
+; REDO
+MidiNoteOn20:
+    if (!isShift){
+        Send {Ctrl down}z{Ctrl up}
+    } else {
+        Send {Ctrl down}{Shift down}z{Shift up}{Ctrl up}
+    }
     Return
 
 repeatJ:
@@ -178,38 +437,6 @@ repeatJ:
     Return
 
 
-MidiNoteOn8:
-    Send {a}
-    midi.MidiOut("N1", 1, 0, 1)
-    midi.MidiOut("N0", 1, 1, 0)
-    Return
-
-MidiNoteOff8:
-    midi.MidiOut("N1", 1, 0, 1)
-    Return
-
-MidiNoteOn9:
-    Send {t}
-    midi.MidiOut("N0", 1, 0, 0)
-    Return
-
-MidiNoteOff9:
-    midi.MidiOut("N1", 1, 1, 1)
-    Return
-
-MidiNoteOn10:
-    Send {w}
-    if (!oldW){
-        midi.MidiOut("N0", 1, 2, 0)
-    }
-    oldW:=!oldW
-    Return
-
-MidiNoteOff10:
-    if (oldW){
-        midi.MidiOut("N1", 1, 2, 1)
-    }
-    Return
 
 MidiNoteOn21:
     repeatJFirst:=true
@@ -258,30 +485,4 @@ MidiNoteOn23:
 MidiNoteOff23:
     SetTimer, repeatL, Delete
     Send {l up}
-    Return
-
-
-/* $2::
-    While (GetKeyState("2","p")){
-        Send 2
-        Sleep 100
-    }
-    return
-*/
-
-; Cut, Row2 Key1
-MidiNoteOn16:
-    ;Send {Ctrl down}{b}{Ctrl up}
-    Send {Ctrl down}{\}{Ctrl up}
-    Return
-
-; Select nearest, Row2 Key2
-MidiNoteOn17:
-    Send {v}
-    Return
-
-
-; Select nearest clip, Row2 Key3
-MidiNoteOn18:
-    Send {Shift down}{v}{shift up}
     Return
