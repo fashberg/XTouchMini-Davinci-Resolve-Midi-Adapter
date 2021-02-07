@@ -9,7 +9,7 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 * Listens to MIDI-Events form Behringer X-TOUCH
 * Sends Keystrokes to currently open Program (DaVinci Resolve)
 * Translates some MIDI commands (endless jog-shuttle mode, repeat some keys if pressed longer)
-* Special Volume-Knob 8: Sets master Volume of you Soundcard and shows current value
+* Special Volume-Knob 8: Sets master Volume of your Soundcard and shows current value
 
 ## Why
 
@@ -40,8 +40,8 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 
 ### Keymappings
 
-* You have to use the DaVinci Resolve Mapping (Menue->DaVinci Resolve->Keyboard Customization...)
-* For moving Keyframes you also have to map:
+* You must use the DaVinci Resolve Mapping (Menu->DaVinci Resolve->Keyboard Customization...)
+* For moving Keyframes you also must do the following mappings:
 
 ![prefs1](images/prefs1.png)
 
@@ -53,8 +53,8 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 
 ## What's not possible
 
-* Black Magic Design offers no API to read settings, current values, etc.., maybe because they build itself excellent Editing and Grading Panels and they want to sell them (i've played a little bit with fusion script with no success)
-* So we can only do whats also can be controlled by keystrokes
+* Black Magic Design offers no API to read settings, current values, etc.., maybe because they build itself excellent Editing and Grading Panels and they want to sell them (I have played a little bit with fusion script with no success)
+* So, we can only do what's also can be controlled by keystrokes
 
 ## Hacking
 
