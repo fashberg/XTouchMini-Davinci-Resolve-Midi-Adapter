@@ -1,0 +1,3 @@
+[submodule "AutoHotkey-Midi"]
+	path = AutoHotkey-Midi
+	url = https://ashberg.de/git/folke/AutoHotkey-Midi.git
