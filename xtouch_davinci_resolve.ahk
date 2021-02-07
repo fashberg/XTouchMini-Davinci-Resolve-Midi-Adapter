@@ -266,7 +266,7 @@ MidiControlChange8:
 ; 
 MidiNoteOn8:
     if (!isShift){
-        Send at
+        Send a
         ; switch row1/key2 off
         midi.MidiOut("N0", 1, 1, 0)
     } else {
