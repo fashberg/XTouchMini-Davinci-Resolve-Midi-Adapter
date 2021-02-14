@@ -11,6 +11,17 @@
 
 #Persistent
 
+; for compiling
+; compile:  'C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe' /in xtouch_davinci_resolve.ahk
+;@Ahk2Exe-SetProductName XTouchMini-Davinci-Resolve-Midi-Adapter
+;@Ahk2Exe-SetInternalName XTouchMini-Davinci-Resolve-Midi-Adapter
+;@Ahk2Exe-SetDescription XTouchMini-Davinci-Resolve-Midi-Adapter
+;@Ahk2Exe-SetCompanyName github.com/fashberg
+;@Ahk2Exe-SetLegalTrademarks github.com/fashberg
+;@Ahk2Exe-SetCopyright github.com/fashberg
+;@Ahk2Exe-SetFileVersion 1.0.0.0
+;@Ahk2Exe-SetProductVersion 1.0.0.0
+
 midi := new Midi()
 ok:=true
 if (midi.OpenMidiOutByName( "X-TOUCH MINI" )<0){

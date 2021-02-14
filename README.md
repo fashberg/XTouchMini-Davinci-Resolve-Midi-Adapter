@@ -29,9 +29,22 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 
 ## Setup
 
-* Download and Install AutoHotKey 1.x from <http://ahkscript.org/> with default Options
+### Variant 1: Binary Download
+
+* Download and Unzip ``XTouchMini-Davinci-Resolve-Midi-Adapter-1.x-BINARY.zip`` from <https://github.com/fashberg/XTouchMini-Davinci-Resolve-Midi-Adapter/releases>
+  * This download contains an 64bit Windows EXE created with Ahk2Exe
 * Connect X-TOUCH MINI
-* Download and Unzip ``XTouchMini-Davinci-Resolve-Midi-Adapter.zip`` from <https://github.com/fashberg/XTouchMini-Davinci-Resolve-Midi-Adapter/releases>
+* Double click ``xtouch_davinci_resolve.exe`` to start
+* All X-TOUCH Buttons will flash once to say hello
+* It will run now in tray (green "H")
+* Open DaVinci Resolve and enjoy new functionality
+* In the folder print-overlay you will find a PDF to label your X-TOUCH
+
+### Variant 2: Auto Hot Key Script Download
+
+* Download and Install AutoHotKey 1.x from <http://ahkscript.org/> with default Options
+* Download and Unzip ``XTouchMini-Davinci-Resolve-Midi-Adapter-1.x-SCRIPT.zip`` from <https://github.com/fashberg/XTouchMini-Davinci-Resolve-Midi-Adapter/releases>
+* Connect X-TOUCH MINI
 * Double click ``xtouch_davinci_resolve.ahk`` to start
 * All X-TOUCH Buttons will flash once to say hello
 * It will run now in tray (green "H")
@@ -42,8 +55,6 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 
 * DaVinci Resolve (Free or Studio)
 * Windows OS
-* A modern version of AutoHotKey (1.1+) from <http://ahkscript.org/>
-* AutoHotkey-Midi from <https://github.com/fashberg/AutoHotkey-Midi>
 * A system with winmm.dll (Windows 2000 or greater)
 * A Behringer X-TOUCH MINI <https://www.behringer.com/product.html?modelCode=P0B3M>
 
@@ -69,3 +80,8 @@ Using this small AHK-Script you can control Davinci Resolve Video Editor with yo
 
 Feel Free to change to your needs.
 I suggest [Microsoft Visual Studio Code](https://code.visualstudio.com/) to edit and debug AHK, also install this extensions [AutoHotKey Debug](https://marketplace.visualstudio.com/items?itemName=helsmy.autohotkey-debug) and [AutoHotkey Plus](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-autohotkey-plus)
+
+You also need:
+
+* A modern version of AutoHotKey (1.1+) from <http://ahkscript.org/>
+* AutoHotkey-Midi from <https://github.com/fashberg/AutoHotkey-Midi>
